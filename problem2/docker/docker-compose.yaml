@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  db-problem2:
+    image: postgres:latest
+    container_name: db-problem2
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: problem2db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+  app:
+    build: .
+    container_name: problem2-app
+    depends_on:
+      - db-problem2
+    environment:
+      DATABASE_URL: postgresql://admin:admin@db:5432/problem2db
+      NODE_ENV: development   # Change to "production" for prod container
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/app
+    networks:
+      - dev
+    command: sh -c "npm run dev:setup"  # Can override to prod:setup if NODE_ENV=production
+
+volumes:
+  db-problem2:
+
+networks:
+  dev:
+    driver: bridge
