@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  problem2-db:
+    image: postgres:latest
+    container_name: problem2-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: problem2db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+  app:
+    build: .
+    container_name: problem2-app
+    depends_on:
+      - problem2-db
+    environment:
+      DATABASE_URL: postgresql://admin:admin@problem2-db:5432/problem2db
+      NODE_ENV: development
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./src:/app/src
+    networks:
+      - dev
+    command: sh -c "npm install && npx prisma generate && npm run dev:setup"
+
+volumes:
+  postgres_data:
+
+networks:
+  dev:
+    driver: bridge
