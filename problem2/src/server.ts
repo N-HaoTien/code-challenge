@@ -23,9 +23,11 @@ app.get("/test", (req, res) => {
 app.listen(PORT, async () => {
   try {
     await prisma.$connect();
-    console.log("✅ Database connected");
-    console.log(`🚀 Server ${process.env.NAME} running at http://localhost:${PORT}`);
+    console.log("Database connected");
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
   } catch (err) {
-    console.error("❌ DB connection error:", err);
+    console.error("DB connection error:", err);
   }
 });
+
+export const server = app; // for testing

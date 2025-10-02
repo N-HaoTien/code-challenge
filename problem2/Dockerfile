@@ -15,7 +15,7 @@ COPY . .
 RUN npm run prisma:generate
 
 # Expose server port
-EXPOSE 5000
+EXPOSE 5002
 
 # Default command: run dev environment
 # For production, override CMD in docker-compose

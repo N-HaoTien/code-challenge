@@ -1,9 +1,9 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  db-problem2:
+  problem2-db:
     image: postgres:latest
-    container_name: db-problem2
+    container_name: problem2-db
     restart: always
     environment:
       POSTGRES_USER: admin
@@ -20,20 +20,20 @@ services:
     build: .
     container_name: problem2-app
     depends_on:
-      - db-problem2
+      - problem2-db
     environment:
-      DATABASE_URL: postgresql://admin:admin@db:5432/problem2db
-      NODE_ENV: development   # Change to "production" for prod container
+      DATABASE_URL: postgresql://admin:admin@problem2-db:5432/problem2db
+      NODE_ENV: development
     ports:
-      - "5001:5001"
+      - "5002:5002"
     volumes:
-      - .:/app
+      - ./src:/app/src
     networks:
       - dev
-    command: sh -c "npm run dev:setup"  # Can override to prod:setup if NODE_ENV=production
+    command: sh -c "npm install && npx prisma generate && npm run dev:setup"
 
 volumes:
-  db-problem2:
+  postgres_data:
 
 networks:
   dev:
